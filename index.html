@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Infinite Story ❤️</title>
+    <style>
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            overflow: hidden; font-family: 'Georgia', serif;
+            background: #000; 
+        }
+
+        #bg-glow {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 50%, #1a010a 0%, #000000 100%);
+            z-index: -1;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            padding: 40px 25px; border-radius: 40px;
+            box-shadow: 0 0 50px rgba(255, 77, 109, 0.25);
+            text-align: center; width: 85%; max-width: 440px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            z-index: 100; transition: all 0.6s ease-in-out;
+            position: relative; margin: auto; margin-top: 12vh;
+        }
+
+        .heart-main { 
+            font-size: 80px; 
+            animation: pulseGlow 2s infinite; 
+            display: inline-block;
+            filter: drop-shadow(0 0 20px #ff4d6d);
+        }
+
+        @keyframes pulseGlow { 
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 15px #ff4d6d); } 
+            50% { transform: scale(1.1); filter: drop-shadow(0 0 45px #ff4d6d); } 
+        }
+
+        h1 { color: #fff; font-size: 24px; margin: 20px 0; text-shadow: 0 0 15px #ff4d6d; }
+        p { color: #ffafbd; font-style: italic; min-height: 100px; line-height: 1.6; font-size: 18px; }
+
+        button {
+            padding: 18px 45px; font-size: 18px; font-weight: bold;
+            border: none; border-radius: 50px; cursor: pointer; transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        #yesBtn { 
+            background: linear-gradient(45deg, #ff4d6d, #800e2b); 
+            color: white; width: 100%; 
+            box-shadow: 0 0 25px rgba(255, 77, 109, 0.4);
+            z-index: 1000;
+        }
+
+        #noBtn { 
+            background: rgba(255, 255, 255, 0.1); 
+            color: rgba(255, 255, 255, 0.6); font-size: 14px; 
+            position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
+            z-index: 9999; border: 1px solid rgba(255,255,255,0.2);
+            transition: 0.1s;
+        }
+
+        /* CALENDAR STYLING */
+        .calendar {
+            display: grid; grid-template-columns: repeat(7, 1fr);
+            gap: 5px; margin-top: 20px; background: rgba(0,0,0,0.3);
+            padding: 15px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.1);
+        }
+        .day { color: white; font-size: 12px; padding: 5px; }
+        .special-day { 
+            background: #ff4d6d; border-radius: 50%; color: white;
+            font-weight: bold; animation: calendarPulse 1s infinite alternate;
+            box-shadow: 0 0 15px #ff4d6d;
+        }
+        @keyframes calendarPulse { from { transform: scale(1); } to { transform: scale(1.2); } }
+
+        .sparkle {
+            position: fixed; background: #fff; border-radius: 50%;
+            pointer-events: none; z-index: 9999; animation: cometFade 1s forwards;
+        }
+        @keyframes cometFade { to { transform: scale(0) translateY(-30px); opacity: 0; } }
+
+        .falling-heart {
+            position: fixed; color: #ff4d6d; pointer-events: none;
+            z-index: 50; animation: fall linear forwards;
+        }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <div id="bg-glow"></div>
+
+    <div class="card" id="card">
+        <div class="heart-main" id="icon">❤️</div>
+        <h1 id="title">A Question of Destiny...</h1>
+        <p id="msg">In a galaxy of billions, across eons of time... my heart has only ever searched for you. Will you be my Valentine? ✨</p>
+
+        <div style="display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%;">
+            <button id="yesBtn" onclick="advanceStage()">Yes, Forever 💍</button>
+        </div>
+    </div>
+
+    <button id="noBtn" onmouseover="handleNo()" onclick="handleNo()">No</button>
+
+    <script>
+        const card = document.getElementById('card');
+        const msg = document.getElementById('msg');
+        const title = document.getElementById('title');
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const icon = document.getElementById('icon');
+
+        let stage = 1;
+        let noCount = 0;
+
+        const stages = [
+            { icon: "🌸", title: "My Heart is Yours.", msg: "A simple date is just a moment. I want a lifetime. Can I be the one who loves you through every season?", btn: "Always ❤️" },
+            { icon: "🌌", title: "A Greater Journey.", msg: "Through the battles and the peace, will you be my partner and my anchor, always?", btn: "Forever 💍" },
+            { icon: "👑", title: "The Final Covenant.", msg: "I promise to cherish you and honor you like the royalty you are. Will you stay by my side?", btn: "By your side ❤️" },
+            { icon: "🔥", title: "Unbreakable Bond.", msg: "Our love is a force even time cannot diminish. Are you ready to build our world?", btn: "Let's build it ❤️" },
+            { icon: "✨", title: "Our Infinite Story.", msg: "I choose you in every version of reality. Are you ready for our future to begin?", btn: "I am ready! ❤️" }
+        ];
+
+        document.addEventListener('mousemove', (e) => {
+            const s = document.createElement('div');
+            s.className = 'sparkle';
+            s.style.left = e.pageX + 'px'; s.style.top = e.pageY + 'px';
+            s.style.width = '4px'; s.style.height = '4px';
+            document.body.appendChild(s);
+            setTimeout(() => s.remove(), 1000);
+        });
+
+        function handleNo() {
+            noCount++;
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 40) + 20;
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 40) + 20;
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+            noBtn.style.bottom = 'auto';
+            noBtn.style.transform = 'none';
+            
+            msg.innerText = "Error: Destiny cannot be denied... 🥺 Try again!";
+            yesBtn.style.boxShadow = `0 0 ${20 + (noCount * 12)}px #ff4d6d`;
+        }
+
+        function advanceStage() {
+            card.style.opacity = '0';
+            setTimeout(() => {
+                if (stage <= stages.length) {
+                    const s = stages[stage-1];
+                    icon.innerText = s.icon;
+                    title.innerText = s.title;
+                    msg.innerText = s.msg;
+                    yesBtn.innerText = s.btn;
+                    stage++;
+                } else {
+                    showFinal();
+                }
+                card.style.opacity = '1';
+            }, 500);
+        }
+
+        function showFinal() {
+            noBtn.style.display = 'none';
+            card.innerHTML = `
+                <div class="heart-main">💖</div>
+                <h1>IT'S A PROMISE!</h1>
+                <p>You've made me the luckiest soul in existence. I love you infinitely.</p>
+                <div class="calendar">
+                    <div class="day">S</div><div class="day">M</div><div class="day">T</div><div class="day">W</div><div class="day">T</div><div class="day">F</div><div class="day">S</div>
+                    <div class="day">1</div><div class="day">2</div><div class="day">3</div><div class="day">4</div><div class="day">5</div><div class="day">6</div><div class="day">7</div>
+                    <div class="day">8</div><div class="day">9</div><div class="day">10</div><div class="day">11</div><div class="day">12</div><div class="day">13</div><div class="special-day">14</div>
+                    <div class="day">15</div><div class="day">16</div><div class="day">17</div><div class="day">18</div><div class="day">19</div><div class="day">20</div><div class="day">21</div>
+                </div>
+                <p style="font-size: 14px; margin-top: 15px;">Feb 2026 - Our New Beginning</p>
+            `;
+            setInterval(() => {
+                const p = document.createElement('div');
+                p.className = 'falling-heart';
+                p.style.left = Math.random() * 100 + 'vw';
+                p.style.top = '-5vh';
+                p.innerHTML = '❤️';
+                p.style.fontSize = Math.random() * 20 + 20 + 'px';
+                p.style.animationDuration = Math.random() * 2 + 2 + 's';
+                document.body.appendChild(p);
+            }, 100);
+        }
+    </script>
+</body>
+</html>
